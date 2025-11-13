@@ -11,5 +11,3 @@ resources:
 - test.yaml
 
 namespace: gitea
-
-enableHelm: true
