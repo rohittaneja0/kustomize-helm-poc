@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea
+  namespace: argocd
+spec:
+  destination:
+    namespace: gitea
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+  - chart: gitea
+    helm:
+      valueFiles:
+          - $values/values/gitea/values.yaml
+    repoURL: https://dl.gitea.com/charts/
+    targetRevision: 11.0.0
+  - kustomize:
+      namespace: gitea
+    path: components/apps/gitea
+    repoURL: https://github.com/rohittaneja0/kustomize-helm-poc
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
