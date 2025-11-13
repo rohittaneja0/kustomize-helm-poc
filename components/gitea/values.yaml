@@ -1,16 +1,15 @@
-values: |
-  image:
-    rootless: true
-  persistence:
-    storageClass: longhorn
-  postgresql-ha:
-    enabled: false
-  postgresql:
-    enabled: true
-  redis-cluster:
-    enabled: false
-  redis:
-    enabled: true
+image:
+  rootless: true
+persistence:
+  storageClass: longhorn
+postgresql-ha:
+  enabled: false
+postgresql:
+  enabled: true
+redis-cluster:
+  enabled: false
+redis:
+  enabled: true
 parameters:
 - name: gitea.config.server.ROOT_URL
   value: https://gitea.redcomet.ca

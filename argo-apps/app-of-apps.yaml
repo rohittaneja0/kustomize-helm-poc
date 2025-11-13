@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps
+spec:
+  destination:
+    namespace: openshift-config
+    server: https://kubernetes.default.svc
+  source:
+    path: aggregates/cluster-a
+    repoURL: https://github.com/rohittaneja0/kustomize-helm-poc
+    targetRevision: v2
+  project: default
+  syncPolicy:
+    automated: null
