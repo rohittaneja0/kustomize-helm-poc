@@ -7,25 +7,40 @@ spec:
   destination:
     namespace: gitea
     server: https://kubernetes.default.svc
-  source:
-    path: components/gitea
-    repoURL: https://github.com/rohittaneja0/kustomize-helm-poc.git
-    targetRevision: HEAD
-  sources:
-    - chart: gitea
-      helm:
-        valueFiles:
-          - $values/values/democratic-csi/k0s-values.yaml
-      repoURL: https://dl.gitea.com/charts/
-    - kustomize:
-        namespace: gitea
-      path: components/gitea
-      repoURL: https://github.com/rohittaneja0/kustomize-helm-poc
-      targetRevision: HEAD
   project: default
+  sources:
+  - chart: gitea
+    helm:
+      values: |
+        image:
+          rootless: true
+        persistence:
+          storageClass: longhorn
+        postgresql-ha:
+          enabled: false
+        postgresql:
+          enabled: true
+        redis-cluster:
+          enabled: false
+        redis:
+          enabled: true
+      parameters:
+      - name: gitea.config.server.ROOT_URL
+        value: https://gitea.redcomet.ca
+      - name: gitea.config.server.DOMAIN
+        value: gitea.redcomet.ca
+      - name: gitea.config.server.SSH_DOMAIN
+        value: gitea.redcomet.ca
+    repoURL: https://dl.gitea.com/charts/
+    targetRevision: 11.0.0
+  - kustomize:
+      namespace: gitea
+    path: components/gitea
+    repoURL: https://github.com/rohittaneja0/kustomize-helm-poc
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
+    - CreateNamespace=true

@@ -2,24 +2,30 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kyverno
-  namespace: argocd
+  namespace: openshift-gitops
 spec:
   destination:
     namespace: kyverno
     server: https://kubernetes.default.svc
-  project: default
-  sources:
-  - chart: kyverno/kyverno
-    helm:
-    repoURL: https://kyverno.github.io/kyverno/
-  - kustomize:
-      namespace: kyverno
+  source:
     path: components/kyverno
     repoURL: https://github.com/rohittaneja0/kustomize-helm-poc
     targetRevision: HEAD
+  sources:
+    - chart: kyverno
+      helm: null
+      repoURL: https://kyverno.github.io/kyverno/
+      path: kyverno
+      targetRevision: 3.5.2
+    - kustomize:
+        namespace: kyverno
+      path: components/kyverno
+      repoURL: https://github.com/rohittaneja0/kustomize-helm-poc
+      targetRevision: HEAD
+  project: default
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
